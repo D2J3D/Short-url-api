@@ -1,11 +1,17 @@
 package ru.gridusov.shorturl.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.sql.Timestamp;
 
 @Entity
 @Table(name = "url")
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Url {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
