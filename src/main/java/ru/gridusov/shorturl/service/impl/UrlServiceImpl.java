@@ -31,8 +31,11 @@ public class UrlServiceImpl implements UrlService {
             }
             shortKey = shortKey.substring(i*7, 7 * (i + 1));
         }
+//        if (urlRepository.findByKey(shortKey).isEmpty()){
+//            throw new Exception("No opportunity to save new short urls");
+//        }
         url.setKey(shortKey);
-        return url;
+        return urlRepository.save(url);
     }
 
     @Override

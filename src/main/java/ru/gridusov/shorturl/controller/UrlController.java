@@ -17,11 +17,10 @@ public class UrlController {
     }
 
 
-    @PostMapping("")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Url createShortUrl(@RequestBody UrlDto urlDto){
         return null;
     }
-
 
 }
