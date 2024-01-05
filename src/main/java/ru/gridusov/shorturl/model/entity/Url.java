@@ -19,8 +19,8 @@ public class Url {
     private String shortUrlKey;
     @Column(nullable = false)
     private String fullUrl;
-    @Column
-    private Long clickAmount = 0L;
+    @Column(columnDefinition = "bigint default 0")
+    private Long clickAmount;
     @Column(nullable = false)
     private Timestamp createdAt;
     @Column

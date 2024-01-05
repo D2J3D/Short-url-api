@@ -36,7 +36,7 @@ public class UrlController {
         }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PostMapping("/create")
+    @PostMapping("/shorten")
     public ResponseEntity<UrlDto> createShortUrl(@RequestBody UrlDto urlDto) throws NoSuchAlgorithmException {
         log.info("Got a POSTMapping request for url: " + urlDto.getFullUrl());
         Url urlEntity = urlMapper.mapFrom(urlDto);
