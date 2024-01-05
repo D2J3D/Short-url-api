@@ -3,24 +3,38 @@ package ru.gridusov.shorturl.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.gridusov.shorturl.dto.UrlDto;
-import ru.gridusov.shorturl.entity.Url;
+import ru.gridusov.shorturl.mappers.Mapper;
+import ru.gridusov.shorturl.model.dto.UrlDto;
+import ru.gridusov.shorturl.model.entity.Url;
 import ru.gridusov.shorturl.service.UrlService;
+
+import java.security.NoSuchAlgorithmException;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/")
 public class UrlController {
     private final UrlService urlService;
+    private final Mapper<Url, UrlDto> urlMapper;
+
     @Autowired
-    public UrlController(UrlService urlService){
+    public UrlController(UrlService urlService, Mapper<Url, UrlDto> urlMapper){
+        this.urlMapper = urlMapper;
         this.urlService = urlService;
     }
 
+    @GetMapping("/{shortUrl}")
+    public String getFullUrl(@PathVariable String shortUrl){
+        Url url = urlService.findByKey(shortUrl);
+        return null;
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Url createShortUrl(@RequestBody UrlDto urlDto){
-        return null;
+    public String createShortUrl(@RequestBody UrlDto urlDto) throws NoSuchAlgorithmException {
+        Url urlEntity = urlMapper.mapFrom(urlDto);
+        Url shortenedUrl = urlService.createShortUrl(urlEntity);
+        return urlMapper.mapTo(shortenedUrl).getShortUrl();
     }
 
 }

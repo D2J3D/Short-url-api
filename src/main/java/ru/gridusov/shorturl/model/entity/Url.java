@@ -1,4 +1,4 @@
-package ru.gridusov.shorturl.entity;
+package ru.gridusov.shorturl.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -7,9 +7,9 @@ import java.sql.Timestamp;
 
 @Entity
 @Table(name = "url")
-@Getter
-@Setter
+@Data
 @Builder
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class Url {

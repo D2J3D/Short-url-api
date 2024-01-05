@@ -2,7 +2,7 @@ package ru.gridusov.shorturl.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import ru.gridusov.shorturl.entity.Url;
+import ru.gridusov.shorturl.model.entity.Url;
 
 import java.util.Optional;
 
@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface UrlRepository extends JpaRepository<Url, Long> {
     Optional<Url> findByFullUrl(String fullUrl);
     Optional<Url> findByKey(String key);
+    void deleteByKey(String key);
 }

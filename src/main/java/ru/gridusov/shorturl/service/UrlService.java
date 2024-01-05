@@ -1,13 +1,15 @@
 package ru.gridusov.shorturl.service;
 
 
-import ru.gridusov.shorturl.entity.Url;
+import ru.gridusov.shorturl.model.entity.Url;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 
 public interface UrlService {
     Url createShortUrl(Url url) throws NoSuchAlgorithmException;
-    Optional<Url> findByKey(String key);
-    Optional<Url> findByFullUrl(String fullUrl);
+    Url findByKey(String key);
+    Url findByFullUrl(String fullUrl);
+    void deleteUser(Long id);
+    void deleteUserByKey(String key);
 }

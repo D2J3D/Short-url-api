@@ -1,4 +1,4 @@
-package ru.gridusov.shorturl.dto;
+package ru.gridusov.shorturl.model.dto;
 
 import lombok.*;
 
