@@ -10,7 +10,8 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Builder
 public class UrlDto {
-    private String shortUrl;
+    private String fullUrl;
+    private String shortUrlKey;
     private Long clickAmount;
     private Timestamp expirationData;
 }

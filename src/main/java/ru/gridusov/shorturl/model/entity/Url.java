@@ -17,7 +17,7 @@ public class Url {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column(unique = true)
-    private String key;
+    private String shortUrlKey;
     @Column(nullable = false)
     private String fullUrl;
     @Column

@@ -1,6 +1,7 @@
 package ru.gridusov.shorturl.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -14,7 +15,6 @@ import ru.gridusov.shorturl.service.UniqueKeyGenerating;
 import ru.gridusov.shorturl.service.UrlService;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -22,7 +22,6 @@ public class UrlServiceImpl implements UrlService {
 
     private final UrlRepository urlRepository;
     private final UniqueKeyGenerating keyGenerator;
-
     @Autowired
     public UrlServiceImpl(UrlRepository urlRepository, UniqueKeyGenerating keyGenerator){
         this.urlRepository = urlRepository;
@@ -32,35 +31,17 @@ public class UrlServiceImpl implements UrlService {
     @Override
     @CachePut(value = "urls", key = "#url.key")
     public Url createShortUrl(Url url) throws NoSuchAlgorithmException {
-        url.setKey(formShortUrl(url.getFullUrl()));
+        log.info("Forming a short key for url: " + url.getFullUrl());
+        url.setShortUrlKey(formShortUrl(url.getFullUrl()));
+        log.info("Saving the url into the database: " + url.getFullUrl() + ". Short url: " + url.getShortUrlKey());
         return urlRepository.save(url);
     }
 
-    private String formShortUrl(String fullUrl) throws NoSuchAlgorithmException {
-        String key = extractUniqueKeyFromHash(keyGenerator.generateHash(fullUrl));
-        if (urlRepository.findByKey(key).isPresent()){
-            throw new NotEnoughSpaceError("No opportunity to save new short urls");
-        }
-        return key;
-    }
-
-    private String extractUniqueKeyFromHash(String hash){
-        String key = hash.substring(0, 7);
-        for (int i = 1; i < (hash.length() / 7); i++){
-            if (urlRepository.findByKey(key).isEmpty()){
-                break;
-            }
-            key = hash.substring(i*7, 7 * (i + 1));
-        }
-        return key;
-    }
-
-
     @Override
     @Cacheable(value = "urls", key = "#key")
-    public Url findByKey(String key) {
+    public Url findByShortUrlKey(String key) {
         log.info("Getting url with key = " + key);
-        return urlRepository.findByKey(key).orElseThrow(() -> new EntityNotFoundException("Not found entity with key: " + key));
+        return urlRepository.findByShortUrlKey(key).orElseThrow(() -> new EntityNotFoundException("Not found entity with key: " + key));
     }
 
     @Override
@@ -72,12 +53,33 @@ public class UrlServiceImpl implements UrlService {
     @Override
     @CacheEvict(value = "urls", key = "#id")
     public void deleteUser(Long id) {
+        log.info("Deleting the url with id: " + id + ".");
         urlRepository.deleteById(id);
     }
 
     @Override
     @CacheEvict(value = "urls", key = "#key")
     public void deleteUserByKey(String key) {
-        urlRepository.deleteByKey(key);
+        log.info("Deleting the url with key: " + key + ".");
+        urlRepository.deleteByShortUrlKey(key);
+    }
+
+    private String formShortUrl(String fullUrl) throws NoSuchAlgorithmException {
+        String key = extractUniqueKeyFromHash(keyGenerator.generateHash(fullUrl));
+        if (urlRepository.findByShortUrlKey(key).isPresent()){
+            throw new NotEnoughSpaceError("No opportunity to save new short urls");
+        }
+        return key;
+    }
+
+    private String extractUniqueKeyFromHash(String hash){
+        String key = hash.substring(0, 7);
+        for (int i = 1; i < (hash.length() / 7); i++){
+            if (urlRepository.findByShortUrlKey(key).isEmpty()){
+                break;
+            }
+            key = hash.substring(i*7, 7 * (i + 1));
+        }
+        return key;
     }
 }

@@ -16,6 +16,7 @@ import java.util.Optional;
 public class UrlController {
     private final UrlService urlService;
     private final Mapper<Url, UrlDto> urlMapper;
+    private final String serviceDomain = "http://localhost:8080/";
 
     @Autowired
     public UrlController(UrlService urlService, Mapper<Url, UrlDto> urlMapper){
@@ -23,10 +24,10 @@ public class UrlController {
         this.urlService = urlService;
     }
 
-    @GetMapping("/{shortUrl}")
-    public String getFullUrl(@PathVariable String shortUrl){
-        Url url = urlService.findByKey(shortUrl);
-        return null;
+    @GetMapping("/{shortUrlKey}")
+    public String getFullUrl(@PathVariable String shortUrlKey){
+        Url url = urlService.findByShortUrlKey(shortUrlKey); //TODO make checks for expiration
+        return this.serviceDomain.concat(url.getShortUrlKey());
     }
 
     @PostMapping
@@ -34,7 +35,7 @@ public class UrlController {
     public String createShortUrl(@RequestBody UrlDto urlDto) throws NoSuchAlgorithmException {
         Url urlEntity = urlMapper.mapFrom(urlDto);
         Url shortenedUrl = urlService.createShortUrl(urlEntity);
-        return urlMapper.mapTo(shortenedUrl).getShortUrl();
+        return urlMapper.mapTo(shortenedUrl).getShortUrlKey();
     }
 
 }

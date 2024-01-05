@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface UrlService {
     Url createShortUrl(Url url) throws NoSuchAlgorithmException;
-    Url findByKey(String key);
+    Url findByShortUrlKey(String key);
     Url findByFullUrl(String fullUrl);
     void deleteUser(Long id);
     void deleteUserByKey(String key);
