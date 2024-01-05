@@ -9,7 +9,6 @@ import java.sql.Timestamp;
 @Table(name = "url")
 @Data
 @Builder
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class Url {
@@ -21,7 +20,7 @@ public class Url {
     @Column(nullable = false)
     private String fullUrl;
     @Column
-    private Long clickAmount;
+    private Long clickAmount = 0L;
     @Column(nullable = false)
     private Timestamp createdAt;
     @Column

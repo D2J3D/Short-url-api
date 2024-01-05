@@ -1,7 +1,6 @@
 package ru.gridusov.shorturl.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -15,6 +14,7 @@ import ru.gridusov.shorturl.service.UniqueKeyGenerating;
 import ru.gridusov.shorturl.service.UrlService;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -29,7 +29,7 @@ public class UrlServiceImpl implements UrlService {
     }
 
     @Override
-    @CachePut(value = "urls", key = "#url.key")
+    @CachePut(value = "urls", key = "#url.shortUrlKey")
     public Url createShortUrl(Url url) throws NoSuchAlgorithmException {
         log.info("Forming a short key for url: " + url.getFullUrl());
         url.setShortUrlKey(formShortUrl(url.getFullUrl()));
@@ -39,9 +39,9 @@ public class UrlServiceImpl implements UrlService {
 
     @Override
     @Cacheable(value = "urls", key = "#key")
-    public Url findByShortUrlKey(String key) {
+    public Optional<Url> findByShortUrlKey(String key) {
         log.info("Getting url with key = " + key);
-        return urlRepository.findByShortUrlKey(key).orElseThrow(() -> new EntityNotFoundException("Not found entity with key: " + key));
+        return urlRepository.findByShortUrlKey(key);
     }
 
     @Override
