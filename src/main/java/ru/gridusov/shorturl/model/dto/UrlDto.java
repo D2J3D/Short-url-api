@@ -2,15 +2,16 @@ package ru.gridusov.shorturl.model.dto;
 
 import lombok.*;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UrlDto {
+public class UrlDto implements Serializable {
     private String fullUrl;
     private String shortUrlKey;
-    private Integer clickAmount = 0;
+    private Long clickAmount = 0L;
     private Timestamp expirationData;
 }

@@ -1,6 +1,5 @@
 package ru.gridusov.shorturl.service.impl;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -29,8 +28,12 @@ public class UrlServiceImpl implements UrlService {
     }
 
     @Override
-//    @CachePut(value = "urls", key = "#url.shortUrlKey")
+    @CachePut(cacheNames = "urls", key = "#url.shortUrlKey")
     public Url createShortUrl(Url url) throws NoSuchAlgorithmException {
+        if (urlRepository.findByFullUrl(url.getFullUrl()).isPresent()){
+            log.info("ВАЖНО LOG:  " + urlRepository.findByFullUrl(url.getFullUrl()).get().toString() );
+            return urlRepository.findByFullUrl(url.getFullUrl()).get();
+        }
         log.info("Forming a short key for url: " + url.getFullUrl());
         url.setShortUrlKey(formShortUrl(url.getFullUrl()));
         log.info("Saving the url into the database: " + url.getFullUrl() + ". Short url: " + url.getShortUrlKey());
@@ -38,35 +41,27 @@ public class UrlServiceImpl implements UrlService {
     }
 
     @Override
-//    @Cacheable(value = "urls", key = "#key")
+    @Cacheable(cacheNames = "urls", key = "#key")
     public Optional<Url> findByShortUrlKey(String key) {
         log.info("Getting url with key = " + key);
         return urlRepository.findByShortUrlKey(key);
     }
 
     @Override
-//    @CacheEvict(value = "urls", key = "#id")
-    public void deleteUrl(Long id) {
-        log.info("Deleting the url with id: " + id + ".");
-        urlRepository.deleteById(id);
-    }
-
-    @Override
-//    @CacheEvict(value = "urls", key = "#key")
-    public void deleteUserByKey(String key) {
+    @CacheEvict(cacheNames = "urls", key = "#key")
+    public void  deleteUserByKey(String key) {
         log.info("Deleting the url with key: " + key + ".");
         urlRepository.deleteByShortUrlKey(key);
     }
 
     @Override
-    public Url findByFullUrl(String fullUrl) {
-        log.info("Getting url with full url = " + fullUrl);
-        return urlRepository.findByFullUrl(fullUrl).orElseThrow(() -> new EntityNotFoundException("Not found entity with full url: " + fullUrl) );
+    public boolean ifExists(Long id) {
+        return urlRepository.existsById(id);
     }
 
     private String formShortUrl(String fullUrl) throws NoSuchAlgorithmException {
         String key = extractUniqueKeyFromHash(keyGenerator.generateHash(fullUrl));
-        if (urlRepository.findByShortUrlKey(key).isPresent()){
+        if (urlRepository.findByShortUrlKey(key).isPresent() ){
             throw new NotEnoughSpaceError("No opportunity to save new short urls");
         }
         return key;

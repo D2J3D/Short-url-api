@@ -3,6 +3,7 @@ package ru.gridusov.shorturl.model.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 @Entity
@@ -11,7 +12,7 @@ import java.sql.Timestamp;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Url {
+public class Url implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "url_id_seq" )
     @SequenceGenerator(name = "url_id_seq", allocationSize = 1)
@@ -20,11 +21,11 @@ public class Url {
     @Column(unique = true)
     private String shortUrlKey;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String fullUrl;
 
-    @Column(columnDefinition = "integer default 0")
-    private Integer clickAmount = 0;
+    @Column
+    private Long clickAmount;
 
     @Column
     private Timestamp createdAt = new Timestamp(System.currentTimeMillis());
