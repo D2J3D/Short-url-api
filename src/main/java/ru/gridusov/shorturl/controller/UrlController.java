@@ -1,5 +1,6 @@
 package ru.gridusov.shorturl.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,17 @@ public class UrlController {
     public UrlController(UrlService urlService, Mapper<Url, UrlDto> urlMapper){
         this.urlMapper = urlMapper;
         this.urlService = urlService;
+    }
+
+    @GetMapping("/redirect/{shortUrlKey}")
+    public void getFullUrlAndRedirect(HttpServletResponse httpServletResponse, @PathVariable String shortUrlKey){
+        Optional<Url> requestedUrl = urlService.findByShortUrlKey(shortUrlKey);
+        if (requestedUrl.isPresent()){
+            String fullUrl = requestedUrl.get().getFullUrl();
+            httpServletResponse.setHeader("Location", fullUrl);
+            httpServletResponse.setStatus(302);
+        }
+
     }
 
     @GetMapping("/{shortUrlKey}")
