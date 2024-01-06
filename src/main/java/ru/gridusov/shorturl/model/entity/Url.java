@@ -2,6 +2,7 @@ package ru.gridusov.shorturl.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.validation.annotation.Validated;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -27,9 +28,9 @@ public class Url implements Serializable{
     @Column
     private Long clickAmount;
 
-    @Column
+    @Column(nullable = false)
     private Timestamp createdAt = new Timestamp(System.currentTimeMillis());
 
-    @Column
+    @Column(nullable = false)
     private Timestamp expirationDate;
 }
