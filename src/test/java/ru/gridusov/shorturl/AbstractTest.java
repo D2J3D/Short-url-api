@@ -1,4 +1,4 @@
-package ru.gridusov.shorturl.service.impl;
+package ru.gridusov.shorturl;
 
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;

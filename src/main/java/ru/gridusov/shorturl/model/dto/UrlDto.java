@@ -11,7 +11,6 @@ import java.sql.Timestamp;
 public class UrlDto {
     private String fullUrl;
     private String shortUrlKey;
-    private Long clickAmount;
-    private Timestamp createdAt;
+    private Integer clickAmount = 0;
     private Timestamp expirationData;
 }

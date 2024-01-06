@@ -29,7 +29,7 @@ public class UrlServiceImpl implements UrlService {
     }
 
     @Override
-    @CachePut(value = "urls", key = "#url.shortUrlKey")
+//    @CachePut(value = "urls", key = "#url.shortUrlKey")
     public Url createShortUrl(Url url) throws NoSuchAlgorithmException {
         log.info("Forming a short key for url: " + url.getFullUrl());
         url.setShortUrlKey(formShortUrl(url.getFullUrl()));
@@ -38,30 +38,30 @@ public class UrlServiceImpl implements UrlService {
     }
 
     @Override
-    @Cacheable(value = "urls", key = "#key")
+//    @Cacheable(value = "urls", key = "#key")
     public Optional<Url> findByShortUrlKey(String key) {
         log.info("Getting url with key = " + key);
         return urlRepository.findByShortUrlKey(key);
     }
 
     @Override
-    public Url findByFullUrl(String fullUrl) {
-        log.info("Getting url with full url = " + fullUrl);
-        return urlRepository.findByFullUrl(fullUrl).orElseThrow(() -> new EntityNotFoundException("Not found entity with full url: " + fullUrl) );
-    }
-
-    @Override
-    @CacheEvict(value = "urls", key = "#id")
-    public void deleteUser(Long id) {
+//    @CacheEvict(value = "urls", key = "#id")
+    public void deleteUrl(Long id) {
         log.info("Deleting the url with id: " + id + ".");
         urlRepository.deleteById(id);
     }
 
     @Override
-    @CacheEvict(value = "urls", key = "#key")
+//    @CacheEvict(value = "urls", key = "#key")
     public void deleteUserByKey(String key) {
         log.info("Deleting the url with key: " + key + ".");
         urlRepository.deleteByShortUrlKey(key);
+    }
+
+    @Override
+    public Url findByFullUrl(String fullUrl) {
+        log.info("Getting url with full url = " + fullUrl);
+        return urlRepository.findByFullUrl(fullUrl).orElseThrow(() -> new EntityNotFoundException("Not found entity with full url: " + fullUrl) );
     }
 
     private String formShortUrl(String fullUrl) throws NoSuchAlgorithmException {

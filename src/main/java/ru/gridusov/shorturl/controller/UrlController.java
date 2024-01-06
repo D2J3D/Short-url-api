@@ -19,7 +19,6 @@ import java.util.Optional;
 public class UrlController {
     private final UrlService urlService;
     private final Mapper<Url, UrlDto> urlMapper;
-    private final String serviceDomain = "http://localhost:8080/";
 
     @Autowired
     public UrlController(UrlService urlService, Mapper<Url, UrlDto> urlMapper){
@@ -38,11 +37,8 @@ public class UrlController {
 
     @PostMapping("/shorten")
     public ResponseEntity<UrlDto> createShortUrl(@RequestBody UrlDto urlDto) throws NoSuchAlgorithmException {
-        log.info("Got a POSTMapping request for url: " + urlDto.getFullUrl());
         Url urlEntity = urlMapper.mapFrom(urlDto);
-        log.info("Mapped DTO to entity");
         Url shortenedUrl = urlService.createShortUrl(urlEntity);
-        log.info("Created shortened url: " + shortenedUrl.getShortUrlKey());
         return new ResponseEntity<>(urlMapper.mapTo(shortenedUrl), HttpStatus.CREATED);
     }
 

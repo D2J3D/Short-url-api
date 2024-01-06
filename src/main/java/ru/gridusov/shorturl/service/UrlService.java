@@ -10,6 +10,6 @@ public interface UrlService {
     Url createShortUrl(Url url) throws NoSuchAlgorithmException;
     Optional<Url> findByShortUrlKey(String key);
     Url findByFullUrl(String fullUrl);
-    void deleteUser(Long id);
+    void deleteUrl(Long id);
     void deleteUserByKey(String key);
 }

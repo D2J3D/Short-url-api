@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.gridusov.shorturl.AbstractTest;
 import ru.gridusov.shorturl.model.entity.Url;
 import ru.gridusov.shorturl.service.UrlService;
 
@@ -11,7 +12,7 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 
 @Slf4j
-public class UrlControllerTest extends AbstractTest{
+public class UrlControllerTest extends AbstractTest {
     @Autowired
     private UrlService urlService;
     @Autowired
