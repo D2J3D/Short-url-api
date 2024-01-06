@@ -20,7 +20,7 @@ public class UrlWatcher {
         this.urlRepository = urlRepository;
     }
 
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "0 0 * * * *")
     public void deleteExpiredUrls(){
         List<Url> allUrls = urlRepository.findAll();
         for (Url url : allUrls){

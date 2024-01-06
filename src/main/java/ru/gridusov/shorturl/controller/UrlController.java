@@ -27,7 +27,7 @@ public class UrlController {
         this.urlService = urlService;
     }
 
-    @GetMapping("/redirect/{shortUrlKey}")
+    @GetMapping("/{shortUrlKey}")
     public void getFullUrlAndRedirect(HttpServletResponse httpServletResponse, @PathVariable String shortUrlKey){
         Optional<Url> requestedUrl = urlService.findByShortUrlKey(shortUrlKey);
         if (requestedUrl.isPresent()){
@@ -35,10 +35,9 @@ public class UrlController {
             httpServletResponse.setHeader("Location", fullUrl);
             httpServletResponse.setStatus(302);
         }
-
     }
 
-    @GetMapping("/{shortUrlKey}")
+    @GetMapping("/unwrap/{shortUrlKey}")
     public ResponseEntity<UrlDto> getFullUrl(@PathVariable String shortUrlKey){
         Optional<Url> requestedUrl = urlService.findByShortUrlKey(shortUrlKey);
         return requestedUrl.map(urlEntity -> {
