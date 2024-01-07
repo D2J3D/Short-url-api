@@ -1,5 +1,7 @@
 package ru.gridusov.shorturl.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,6 +13,7 @@ import ru.gridusov.shorturl.model.entity.Url;
 import ru.gridusov.shorturl.service.UrlService;
 
 import java.security.NoSuchAlgorithmException;
+
 import java.util.Optional;
 
 @Slf4j
@@ -27,6 +30,17 @@ public class UrlController {
     }
 
     @GetMapping("/{shortUrlKey}")
+    public void getFullUrlAndRedirect(HttpServletResponse httpServletResponse, @PathVariable String shortUrlKey){
+        Optional<Url> requestedUrl = urlService.findByShortUrlKey(shortUrlKey);
+        if (requestedUrl.isPresent()){
+            String fullUrl = requestedUrl.get().getFullUrl();
+            httpServletResponse.setHeader("Location", fullUrl);
+            httpServletResponse.setStatus(302);
+        }
+    }
+
+
+    @GetMapping("/unwrap/{shortUrlKey}")
     public ResponseEntity<UrlDto> getFullUrl(@PathVariable String shortUrlKey){
         Optional<Url> requestedUrl = urlService.findByShortUrlKey(shortUrlKey);
         return requestedUrl.map(urlEntity -> {
@@ -36,10 +50,9 @@ public class UrlController {
     }
 
     @PostMapping("/shorten")
-    public ResponseEntity<UrlDto> createShortUrl(@RequestBody UrlDto urlDto) throws NoSuchAlgorithmException {
+    public ResponseEntity<UrlDto> createShortUrl(@Valid @RequestBody UrlDto urlDto) throws NoSuchAlgorithmException {
         Url urlEntity = urlMapper.mapFrom(urlDto);
         Url shortenedUrl = urlService.createShortUrl(urlEntity);
         return new ResponseEntity<>(urlMapper.mapTo(shortenedUrl), HttpStatus.CREATED);
     }
-
 }

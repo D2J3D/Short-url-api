@@ -10,5 +10,6 @@ import java.util.Optional;
 public interface UrlRepository extends JpaRepository<Url, Long> {
     Optional<Url> findByFullUrl(String fullUrl);
     Optional<Url> findByShortUrlKey(String key);
+    boolean existsByFullUrl(String fullUrl);
     void deleteByShortUrlKey(String key);
 }
