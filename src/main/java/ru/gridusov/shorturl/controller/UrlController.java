@@ -41,13 +41,21 @@ public class UrlController {
         }
     }
 
-
-    @GetMapping("/unwrap/{shortUrlKey}")
+    @GetMapping("/full/{shortUrlKey}")
     public ResponseEntity<UrlDto> getFullUrl(@PathVariable String shortUrlKey){
         Optional<Url> requestedUrl = urlService.findByShortUrlKey(shortUrlKey);
         return requestedUrl.map(urlEntity -> {
             UrlDto urlDto = urlMapper.mapTo(urlEntity);
             return new ResponseEntity<>(urlDto, HttpStatus.OK);
+        }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping("/full/view/{shortUrlKey}")
+    public ResponseEntity<String> getFullUrlString(@PathVariable String shortUrlKey){
+        Optional<Url> requestedUrl = urlService.findByShortUrlKey(shortUrlKey);
+        return requestedUrl.map(urlEntity -> {
+            UrlDto urlDto = urlMapper.mapTo(urlEntity);
+            return new ResponseEntity<>(urlDto.getFullUrl(), HttpStatus.OK);
         }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 

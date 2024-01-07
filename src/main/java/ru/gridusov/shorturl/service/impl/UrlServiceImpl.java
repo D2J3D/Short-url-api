@@ -12,6 +12,7 @@ import ru.gridusov.shorturl.service.UniqueKeyGenerating;
 import ru.gridusov.shorturl.service.UrlService;
 
 import java.security.NoSuchAlgorithmException;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,7 +46,7 @@ public class UrlServiceImpl implements UrlService {
     @Override
     public Optional<Url> findByShortUrlKey(String key) {
         Optional<Url> urlCandidate = urlRepository.findByShortUrlKey(key);
-        if (urlCandidate.isPresent()){
+        if (urlCandidate.isPresent() && !isExpired(urlCandidate.get().getExpirationDate())){
             Url url = urlCandidate.get();
             url.increaseClickAmount();
             return Optional.of(urlRepository.save(url));
@@ -63,6 +64,12 @@ public class UrlServiceImpl implements UrlService {
     public void deleteUserByKey(String key) {
         log.info("Deleting the url with key: " + key + ".");
         urlRepository.deleteByShortUrlKey(key);
+    }
+
+    @Override
+    public boolean isExpired(Timestamp expirationDate) {
+        Timestamp currentDate = new Timestamp(System.currentTimeMillis());
+        return !(expirationDate.after(currentDate));
     }
 
     @Override

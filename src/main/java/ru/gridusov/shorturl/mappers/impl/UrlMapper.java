@@ -27,19 +27,19 @@ public class UrlMapper implements Mapper<Url, UrlDto> {
     @Override
     public Url mapFrom(UrlDto urlDto) {
         Url url =  modelMapper.map(urlDto, Url.class);
-        url = setCreatedAt(url);
-        url = setExpirationDate(url);
+        url = checkCreatedAt(url);
+        url = checkExpirationDate(url);
         return url;
     }
 
-    private Url setExpirationDate(Url url){
+    private Url checkExpirationDate(Url url){
         if (url.getExpirationDate() == null){
             url.setExpirationDate(Timestamp.valueOf(url.getCreatedAt().toLocalDateTime().plusWeeks(1)));
         }
         return url;
     }
 
-    private Url setCreatedAt(Url url){
+    private Url checkCreatedAt(Url url){
         if (url.getCreatedAt() == null){
             url.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         }
