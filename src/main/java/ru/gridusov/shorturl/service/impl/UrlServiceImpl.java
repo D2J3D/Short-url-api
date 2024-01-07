@@ -33,7 +33,7 @@ public class UrlServiceImpl implements UrlService {
     public Url createShortUrl(Url url) throws NoSuchAlgorithmException {
         if (urlRepository.existsByFullUrl(url.getFullUrl())) {
             Url foundUrl = urlRepository.findByFullUrl(url.getFullUrl()).get();
-            foundUrl.setClickAmount(foundUrl.getClickAmount() + 1);
+            foundUrl.increaseClickAmount();
             return urlRepository.save(foundUrl);
         }
         log.info("Forming a short key for url: " + url.getFullUrl());
@@ -47,11 +47,16 @@ public class UrlServiceImpl implements UrlService {
         Optional<Url> urlCandidate = urlRepository.findByShortUrlKey(key);
         if (urlCandidate.isPresent()){
             Url url = urlCandidate.get();
-            url.setClickAmount(url.getClickAmount() + 1);
+            url.increaseClickAmount();
             return Optional.of(urlRepository.save(url));
         }
         log.info("Getting url with key = " + key);
         return urlCandidate;
+    }
+
+    @Override
+    public Optional<Url> findByFullUrl(String fullUrl) {
+        return urlRepository.findByFullUrl(fullUrl);
     }
 
     @Override

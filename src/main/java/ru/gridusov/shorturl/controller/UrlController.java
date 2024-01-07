@@ -2,6 +2,7 @@ package ru.gridusov.shorturl.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/short-api")
 public class UrlController {
+    @Getter
     private final UrlService urlService;
     private final Mapper<Url, UrlDto> urlMapper;
 

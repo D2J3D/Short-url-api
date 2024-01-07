@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
 
 import java.io.Serializable;
@@ -41,4 +42,11 @@ public class Url implements Serializable{
     @Column
     @NotNull(message = "Expiration date can't be null.")
     private Timestamp expirationDate;
+
+    public void increaseClickAmount(){
+        if (this.getClickAmount() == null){
+            this.clickAmount = 0L;
+        }
+        this.clickAmount += 1;
+    }
 }
