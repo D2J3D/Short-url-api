@@ -1,10 +1,14 @@
 package ru.gridusov.shorturl.model.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.validation.annotation.Validated;
 
 import java.io.Serializable;
+import java.sql.Time;
 import java.sql.Timestamp;
 
 @Entity
@@ -22,15 +26,19 @@ public class Url implements Serializable{
     @Column(unique = true)
     private String shortUrlKey;
 
-    @Column(nullable = false)
+    @Column
+    @NotBlank(message = "Url mustn't be equal to empty string (or null)")
     private String fullUrl;
 
     @Column
+    @Min(value = 0, message = "Amount of clicks should not be less than zero.")
     private Long clickAmount;
 
-    @Column(nullable = false)
+    @Column
+    @NotNull(message = "Date of creation can't be null.")
     private Timestamp createdAt = new Timestamp(System.currentTimeMillis());
 
     @Column(nullable = false)
+    @NotNull(message = "Expiration date can't be null.")
     private Timestamp expirationDate;
 }
