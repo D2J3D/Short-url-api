@@ -2,6 +2,7 @@ package ru.gridusov.shorturl.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 import ru.gridusov.shorturl.config.LinkShortenerConfig;
 import ru.gridusov.shorturl.model.entity.Url;

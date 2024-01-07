@@ -38,7 +38,7 @@ public class Url implements Serializable{
     @NotNull(message = "Date of creation can't be null.")
     private Timestamp createdAt = new Timestamp(System.currentTimeMillis());
 
-    @Column(nullable = false)
+    @Column
     @NotNull(message = "Expiration date can't be null.")
     private Timestamp expirationDate;
 }
